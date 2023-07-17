@@ -1,6 +1,7 @@
 %Code to graph light rays refracting through glass & water 
 
 function GraphRays (dist,indices,lim,alpha_param,phi_param,label)
+
     %Defining paramters
     d0=dist(1); %distance from camera optical center to glass  
     d1=dist(2); %glass thickness in mm
@@ -54,7 +55,9 @@ function GraphRays (dist,indices,lim,alpha_param,phi_param,label)
             ray0=[ray0_x;ray0_y;d0];
     
             %compute ray and graph (output: refPts=[v0;pi;v1;po;v2];)
-            raytrace_vec=RayTrace(ray0, normal, ng, nw, d0, d1,zero); 
+            raytrace_out=RayTrace(ray0, normal, ng, nw, d0, d1,zero); 
+            raytrace_vec=[raytrace_out(1:3)';raytrace_out(4:6)';raytrace_out(7:9)';raytrace_out(10:12)';raytrace_out(13:15)'];
+
             ray_pi=raytrace_vec(2,:);
             ray_po=raytrace_vec(4,:);
             ray_v2=raytrace_vec(5,:);
