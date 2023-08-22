@@ -62,6 +62,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     %Graphing note: Y becomes Z axis, Z becomes Y axis (to match convention)
     ax= gca;
     ax.ZDir='reverse';
+    grid on 
 
     %Defining Rotation Matrices
     R_x1=[1,0,0;0,cos(rotation1(2)),-sin(rotation1(2));0,sin(rotation1(2)),cos(rotation1(2))];
@@ -94,6 +95,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     y_coords2=[bottom_left2(2);top_left2(2);top_right2(2);bottom_right2(2)];
     z_coords2=[(bottom_left2(3)+dist_water);(top_left2(3)+dist_water);(top_right2(3)+dist_water);(bottom_right2(3)+dist_water)]; 
 
+
     %Graphing interface planes
     patch(x_coords1,z_coords1,y_coords1,[0.3010 0.7450 0.9330])
     hold on
@@ -108,12 +110,14 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     ylim([-lim/4 lim]);
     zlim([-lim lim]);
     view(gca,[90 0.77])
+
      
     %{ 
     %UNCOMMENT TO DISPLAY ROTATION PARAMETERS
     text(0,-4,4,"Plane 1 Rotation: [" + string(rotation1(1)*180/pi) + " about Y, " + string(rotation1(2)*180/pi) + " about X] degrees");
     text(0,-4,2,"Plane 2 Rotation: [" + string(rotation2(1)*180/pi) + " about Y, " + string(rotation2(2)*180/pi) + " about X] degrees");
     %}
+
 
    %Calculate & plot rays
     for alpha = alpha_param(1):alpha_param(2):alpha_param(3)
@@ -129,23 +133,19 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             initialray=[initialray_x;initialray_y;t_air];
     
             %Compute Ray Vectors
-            ray_information= FindIntersection(rotation_matrix1,rotation_matrix2,initialray,t_air,t_glass,i_air,i_glass,i_water,origin);
-
+            ray_information= FindIntersection(rotation_matrix1,rotation_matrix2,initialray,t_air,t_glass,t_water,i_air,i_glass,i_water,origin);
+                                             
             %Ray Data
             vwater=ray_information(1,:);
             intersect_glass=ray_information(2,:);
             intersect_water=ray_information(3,:);
-            opticalintersect=ray_information(4,:);
+            intersect_fish=ray_information(4,:);
+            opticalintersect=ray_information(5,:);
 
-            %Find end point of the ray in water (defined by the given water
-            %depth)
-            scale_water = t_water / (vwater* optical_axis);
-            fish_intercept = (scale_water*vwater + intersect_water); 
-           
             %Find origins and directions of each refracted section of the
             %ray
             origins=[(origin)';(intersect_glass);(intersect_water)]; 
-            directions=[(intersect_glass);((intersect_water-intersect_glass));((fish_intercept-intersect_water))];
+            directions=[(intersect_glass);((intersect_water-intersect_glass));((intersect_fish-intersect_water))];
     
             x_origins=origins(:,1);
             y_origins=origins(:,3); %switch z to y axis
@@ -155,15 +155,21 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             v_z=directions(:,2);
             
             % Tracing back water rays to optical axis
-            fish_origin=[fish_intercept(1),fish_intercept(3),fish_intercept(2)];
+            fish_origin=[intersect_fish(1),intersect_fish(3),intersect_fish(2)];
             b_dir=[-vwater(1),-vwater(3),-vwater(2)];
-            
+
+            %Find xy positional error 
+            norm_initial=initialray/norm(initialray); %unit vector in air 
+            scaling_fish=(t_air+t_glass+t_water)/norm_initial(3); %because you want the z direction to  be all in one depth 
+            estim_fishintercept=scaling_fish*norm_initial;
+            xy_error=estim_fishintercept'-intersect_fish;
+
             %For color change ('y' color label option)
             ii= ii +1; 
             j_= j_ +1;
             
             %each row is a different alpha, column a different phi         
-            focal_information{i_,j_}=[round(alpha*180/pi),round(phi*180/pi),double(real(opticalintersect))];
+            focal_information{i_,j_}=[double(round(alpha*180/pi)),double(round(phi*180/pi)),double(real(opticalintersect)),double(xy_error)];
             
             %Plotting ray with chosen labeling option
             if color=='y' 
@@ -174,15 +180,17 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             else 
                 hold on
                 quiver3(x_origins,y_origins,z_origins,v_x,v_y,v_z,0,'-*b') %refracted rays
-
+                
                 hold on
                 quiver3(fish_origin(1),fish_origin(2),fish_origin(3),b_scale*b_dir(1),b_scale*b_dir(2),b_scale*b_dir(3),'-*r') %backtraced rays
+
+                hold on
+                quiver3(0,0,0,estim_fishintercept(1),estim_fishintercept(3),estim_fishintercept(2),0,'-pentagramk') %estimated rays
 
                 if label =='y'
                     label_coords=[intersect_glass(1)*2/3,intersect_glass(2)*2/3,intersect_glass(3)*2/3];
                     label_alpha=string(round(alpha*180/pi));
                     text(label_coords(1),label_coords(3),label_coords(2),string(label_alpha),'FontSize',8,'Color',[0 .3 .7])
-
                     %{
                     %Work in progress. Labeling backtraced rays.
                     bscale=z_total/(vwater*[0;0;1]);
@@ -191,8 +199,8 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
                     text(blabel_coords(1),blabel_coords(2),blabel_coords(3),string(blabel_alpha),'FontSize',8,'Color',[.5 .1 .3])
                     %}
                 end
-            end 
-        end
+            end     
+        end       
     end
 end 
 

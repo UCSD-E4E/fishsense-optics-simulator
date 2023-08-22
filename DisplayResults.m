@@ -33,7 +33,7 @@ function DisplayResults(focalinfo)
             hold on
 
             scatter3(vari,vari3,vari2,'filled') 
-            text(vari,vari3,vari2,(string(alphavari)+ " " + string(betavari)))
+           text(vari,vari3,vari2,(string(alphavari)+ " " + string(betavari)))
         end
     end
 end

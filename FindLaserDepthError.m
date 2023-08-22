@@ -3,11 +3,13 @@
 %laser
 
 function FindLaserDepthError(rot1,rot2,layer_thickness,layer_indices,laser_origin,laser_dir)
+    syms tp td
 
     %Defining layer thicknesses
     air_dist=layer_thickness(1);
     glass_dist=layer_thickness(2);
     dist_water=air_dist+glass_dist;
+    dwat=layer_thickness(3);
 
     %Defining indices of refraction
     air_mu=layer_indices(1);
@@ -46,13 +48,18 @@ function FindLaserDepthError(rot1,rot2,layer_thickness,layer_indices,laser_origi
     x_coords2=[bottom_left2(1);top_left2(1);top_right2(1);bottom_right2(1)]; 
     y_coords2=[bottom_left2(2);top_left2(2);top_right2(2);bottom_right2(2)];
     z_coords2=[(bottom_left2(3)+dist_water);(top_left2(3)+dist_water);(top_right2(3)+dist_water);(bottom_right2(3)+dist_water)]; %translating y coordinates
+   
+    z_coords3=[(bottom_left(3)+dist_water+dwat);(top_left(3)+dist_water+dwat);(top_right(3)+dist_water+dwat);(bottom_right(3)+dist_water+dwat)]; %translating y coordinates
 
+    figure
     %Graph interface planes
     patch(x_coords1,z_coords1,y_coords1,[0.3010 0.7450 0.9330])
     hold on
     patch(x_coords2,z_coords2,y_coords2,[0 0.5470 0.5410])
     hold on
-    
+    patch(x_coords1,z_coords3,y_coords1,[0.3010 0.7450 0.9330]) %fish plane 
+ 
+   
     lim=100;
     xlabel('X Axis (mm)')
     ylabel('Z Axis (mm)')
@@ -67,9 +74,51 @@ function FindLaserDepthError(rot1,rot2,layer_thickness,layer_indices,laser_origi
     ax= gca;
     ax.ZDir='reverse';
 
-    hold on
-    quiver3(laser_origin(1),laser_origin(3),laser_origin(2),3000*normlaser_dir(1),3000*normlaser_dir(3),3000*normlaser_dir(2),0,'-*r');
 
+%Code below used to find error/distance between dive and pool rays.
+%Uncomment to see plot of the two different lasers. This assumes laser
+%origin/laser direction inputs of the function are the pool parameters. The
+%dive parameters are hard coded below. 
+
+
+    %Define dive directions
+    diveorigin=[-0.03163025; -0.10136059; 0]*1000;
+    divedir=[0.01214438; 0.02188269;0.99968678];
+
+    %Parametrize pool laser 
+    zpray=laser_origin(3)+ tp*normlaser_dir(3);
+   
+    %Define equations of planes
+    planefishp=1*(zpray-(dist_water+dwat));
+
+    %Solve for poolray/fishplane intersection
+    tp_ans= simplify(vpasolve(planefishp,tp));
+    poolfish_intersect=[simplify(laser_origin(1)+tp_ans*normlaser_dir(1));simplify(laser_origin(2)+tp_ans*normlaser_dir(2));simplify(laser_origin(3)+tp_ans*normlaser_dir(3))];
+
+    %solve for dive laser fish intersect
+    %Parametrize dive laser 
+    zdray=diveorigin(3)+ td*divedir(3);
+   
+    %Define equations of planes
+    planefishd=1*(zdray-(dist_water+dwat));
+
+    %Solve for poolray/fishplane intersection
+    td_ans= simplify(vpasolve(planefishd,td));
+    divefish_intersect=[simplify(diveorigin(1)+td_ans*divedir(1));simplify(diveorigin(2)+td_ans*divedir(2));simplify(diveorigin(3)+td_ans*divedir(3))];
+
+    hold on
+    quiver3(laser_origin(1),laser_origin(3),laser_origin(2),(poolfish_intersect(1)-laser_origin(1)),(poolfish_intersect(3)-laser_origin(3)),(poolfish_intersect(2)-laser_origin(2)),0,'-or');
+    hold on 
+    %plot dive direction
+    quiver3(diveorigin(1),diveorigin(3),diveorigin(2),(divefish_intersect(1)-diveorigin(1)),(divefish_intersect(3)-diveorigin(3)),(divefish_intersect(2)-diveorigin(2)),0,'-ok');
+    laser_diff=divefish_intersect-poolfish_intersect
+    magnitude_diff=norm(laser_diff)
+    %anglediff=arccos((laser_dir'*divedir)/(norm(laser_dir)*norm(divedir));
+
+
+    %Code below will plot unrefracted and refracted depths. Comment out
+    %above code, and uncomment below code to see this
+%{
     %Looping through different estimated depths 
     for d=1000:100:2000
 
@@ -78,8 +127,9 @@ function FindLaserDepthError(rot1,rot2,layer_thickness,layer_indices,laser_origi
 
         laserfish=laser_origin+laser_vec; %position of laser dot on fish
         estimated_laser=laserfish/norm(laserfish); %defining the unit vector from origin to intersection of laser with given depth 
-        find_laserintersect=FindIntersection(rotationmatrix_1,rotationmatrix_2,estimated_laser,air_dist,glass_dist,air_mu,glass_mu,water_mu,[0;0;0]); %find refractive intersection points
+        find_laserintersect=FindIntersection(rotationmatrix_1,rotationmatrix_2,estimated_laser,air_dist,glass_dist,dwat,air_mu,glass_mu,water_mu,[0;0;0]); %find refractive intersection points
 
+    
         laserinwater_vec=(find_laserintersect(1,:))';
         laser_glasswater_pos=(find_laserintersect(3,:))';
         laser_airglass_pos=find_laserintersect(2,:)';
@@ -95,4 +145,7 @@ function FindLaserDepthError(rot1,rot2,layer_thickness,layer_indices,laser_origi
         quiver3([0,laser_airglass_pos(1),laser_glasswater_pos(1)],[0,laser_airglass_pos(3),laser_glasswater_pos(3)],[0,laser_airglass_pos(2),laser_glasswater_pos(2)],[laser_airglass_pos(1),inglass_directions(1),3000*laserinwater_vec(1)],[laser_airglass_pos(3),inglass_directions(3),3000*laserinwater_vec(3)],[laser_airglass_pos(2),inglass_directions(2),3000*laserinwater_vec(2)],0,'--*b')
         
     end 
+%}
+
+
 end

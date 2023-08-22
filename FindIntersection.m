@@ -2,9 +2,9 @@
 %Plane 1 refers to the air/glass interface and plane 2 refers to the 
 %glass/water interface
 
-function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass,mu_air,mu_glass,mu_water,origin)
+function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass,d_water,mu_air,mu_glass,mu_water,origin)
     
-    syms t1 t2 t s
+    syms t1 t2 t7 t s
 
     % Ensure input vector is a unit vector 
     v_air = v_air / norm(v_air);
@@ -30,7 +30,8 @@ function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass
     
     %Defining set points on translated/rotated plane
     planepoint1=[0;0;d_air]; 
-    planepoint2=[0;0;d_air+d_glass]; 
+    planepoint2=[0;0;d_air+d_glass];
+    planepoint3=[0;0;d_air+d_glass+d_water];
     
     %Parametrize air ray 
     x1=origin(1)+ t1*v_air(1);
@@ -74,6 +75,23 @@ function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass
     
     v_water = a_water * v_glass + b_water * normal2;
 
+    
+    %Find intersection of rays to a given depth 
+
+    %Parametrize glass ray 
+    x3=water_intersect(1)+ t7*v_water(1);
+    y3=water_intersect(2)+ t7*v_water(2);
+    z3=water_intersect(3)+ t7*v_water(3);
+   
+    %Define equations of planes
+
+    plane3=1*(z3-planepoint3(3));
+
+    %Solve for glass/water intersection
+    t_ans7= simplify(vpasolve(plane3,t7));
+    fish_intersect=[simplify(water_intersect(1)+t_ans7*v_water(1));simplify(water_intersect(2)+t_ans7*v_water(2));simplify(water_intersect(3)+t_ans7*v_water(3))];
+   
+
     %Find shortest distance of the rays to optical axis, and location
 
     t3=water_intersect(1)/v_water(1);
@@ -84,7 +102,12 @@ function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass
         y_intersect=0;
         z_intersect=simplify(water_intersect(3)-v_water(3)*t3);
 
-    else %If rays do not intersect optical axis 
+    elseif (cross(v_water',[0,0,1])==0) %if there's no refraction 
+        x_intersect=0;
+        y_intersect=0;
+        z_intersect=0;
+
+    else%If rays do not intersect optical axis 
 
         %Defining a line representing optical axis
         l1=[0;0;-1000+t];
@@ -110,7 +133,7 @@ function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass
         z_intersect=double(Q(3));
     end
     optical_intersect=[x_intersect;y_intersect;z_intersect];
-    intersections=[v_water';glass_intersect';water_intersect';optical_intersect'];
+    intersections=[v_water';glass_intersect';water_intersect';fish_intersect';optical_intersect'];
 end
 
 
