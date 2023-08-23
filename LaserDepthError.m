@@ -37,10 +37,9 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     xx=0; 
     
     %Setting up output matrix: shows depth, error in depth, and percent error in depth/length 
-    depth_error=zeros(num_w,3);
+    depth_error=zeros(num_w,5);
 
     %Setting up interface planes
-
     plane_size=2000;
     x_oords1=[-plane_size;-plane_size;plane_size;plane_size];
     y_oords1=[plane_size;-plane_size;-plane_size;plane_size];
@@ -79,7 +78,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
 
        planeorigins=[0,ag_intersect(1),gw_intersect(1);0,ag_intersect(2),gw_intersect(2);0,ag_intersect(3),gw_intersect(3)];
        laser_refractedray_dir=[[ag_intersect(1),(gw_intersect(1)-ag_intersect(1)),(laser_posfish(1)-gw_intersect(1))];[ag_intersect(2),(gw_intersect(2)-ag_intersect(2)),(laser_posfish(2)-gw_intersect(2))];[ag_intersect(3),(gw_intersect(3)-ag_intersect(3)),(laser_posfish(3)-gw_intersect(3))]]; 
-
+       
        %plot refrfacted (actual) and unrefracted (estimated) light rays 
        hold on 
        quiver3(planeorigins(1,:),planeorigins(3,:),planeorigins(2,:),laser_refractedray_dir(1,:),laser_refractedray_dir(3,:),laser_refractedray_dir(2,:),0,'color',CM(xx,:))
@@ -90,8 +89,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        %plot estimated, unrefracted light rays. Extend out by arbitrary 6000 mm
        %scale
        quiver3([0],[0],[0],vair(1)*6000,vair(3)*6000,vair(2)*6000,0,'color',CM(xx,:))
-
-
+       %}
        %Find estimated error between refracted and unrefracted laser
        %positions
 
@@ -105,8 +103,12 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        %Find difference in depth
        estimation_posfish=simplify(varcam*vair);
 
+       %angle of vair
+       a_vair=acos((vair'*[0;0;1])/norm(vair))*180/pi;
+       p_vair=acos((vair'*[1;0;0])/norm(vair))*180/pi;
+
        error_indepth=estimation_posfish(3)-laser_posfish(3);
        percent_depth_error= (error_indepth/laser_posfish(3))*100;
-       depth_error(xx,:)=[w,error_indepth,percent_depth_error];
+       depth_error(xx,:)=[w,error_indepth,percent_depth_error,a_vair,p_vair];
     end
 end 

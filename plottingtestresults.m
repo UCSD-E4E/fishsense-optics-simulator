@@ -54,8 +54,16 @@ Y: Z coordinate of virtual cam
 %rotation, small IOR----------------
 %depthtest_averages={avg0;avg2;avg4;avg6;avg16;avg16_1;avg18;avg18_1;avg20;avg20_1;avg22;avg22_1};
 
+%1/10th rotation(both parallel and in opposite directions), along with 0
+%rotation, large IOR----------------
+%depthtest_averages={avg1;avg3;avg5;avg7;avg17;avg17_1;avg19;avg19_1;avg21;avg21_1;avg23;avg23_1};
+
 %1/10th rotation (both parallel and in opposite directions), both IOR------
 %depthtest_averages={avg16;avg16_1;avg17;avg17_1;avg18;avg18_1;avg19;avg19_1;avg20;avg20_1;avg21;avg21_1;avg22;avg22_1;avg23;avg23_1}; %OK rotation rlly doesnt have too much of an impact, rlly its the ior. Even with changes in rotation the zcoordinate is very much abt thes same
+
+%0 and 1/10 rotations and all IOR and depths 
+%depthtest_averages={avg0;avg1;avg2;avg3;avg4;avg5;avg6;avg7;avg16;avg16_1;avg17;avg17_1;avg18;avg18_1;avg19;avg19_1;avg20;avg20_1;avg21;avg21_1;avg22;avg22_1;avg23;avg23_1}; %OK rotation rlly doesnt have too much of an impact, rlly its the ior. Even with changes in rotation the zcoordinate is very much abt thes same
+
 
 %AlphaDepthTest(depthtest_averages)
 
@@ -184,7 +192,7 @@ indices_largest=[1;1.495;1.34995];
 %Uncomment a line to see the graph and corresponding error data. 
 
 %Pool laser----
-% laser_err1=LaserDepthError(paralplane,layerthick1,indices_small,wat_dp,pool_lo,pool_ld);
+ % laser_err1=LaserDepthError(paralplane,layerthick1,indices_small,wat_dp,pool_lo,pool_ld);
 % laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
 
 % laser_err3=LaserDepthError(paralplane,layerthick2,indices_small,wat_dp,pool_lo,pool_ld);
@@ -197,6 +205,71 @@ indices_largest=[1;1.495;1.34995];
 % laser_err7=LaserDepthError(paralplane,layerthick2,indices_small,wat_dp,dive_lo,dive_ld);
 % laser_err8=LaserDepthError(paralplane,layerthick2,indices_largest,wat_dp,dive_lo,dive_ld);
 
-%}
+%Testing with laser directions from cameras 2-7 ( pool test)
 
+laser_origin2=[-0.03090316;-0.0995172;0]*1000;
+laser_dir2=[0.03036567;0.03888114;0.99878215];
+
+laser_origin3=[-0.02938965; -0.09794052;0]*1000;
+laser_dir3=[-0.00760419;0.01835205; 0.9998026 ];
+
+laser_origin4=[-0.03088575; -0.09819288;0]*1000;
+laser_dir4=[0.01611468; 0.02188467; 0.99963054];
+
+laser_origin5=[-0.02968504;-0.09813952;0]*1000;
+laser_dir5=[0.01520644;0.02237695;0.99963369];
+
+laser_origin6=[-0.02991985;-0.09841192;0]*1000;
+laser_dir6=[0.02536296;0.00915088;0.99963614];
+
+laser_origin7=[-0.03142921;-0.09906525;0]*1000;
+laser_dir7=[0.02814415;0.01302515;0.99951866];
+
+%ANOTHER WAY TO PLOT LASER DEPTH ERROR: 
+
+%Using largest IOR, layerthick1, plotting the varying %errors in length/depth for each camera.
+% Uncomment to see test results
+%{
+
+laser_error2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
+laser_error3=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
+laser_error4=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin4,laser_dir4);
+laser_error5=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin5,laser_dir5);
+laser_error6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin6,laser_dir6);
+laser_error7=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin7,laser_dir7);
+laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
+laser_err6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,dive_lo,dive_ld);
+
+
+
+%Plot error on y axis, depth on x
+laser_errtests=[laser_error2;laser_error3;laser_error4;laser_error5;laser_error6;laser_error7;laser_err2;laser_err6];
+laser_originv=[laser_origin2,laser_origin3,laser_origin4,laser_origin5,laser_origin6,laser_origin7,pool_lo,dive_lo];
+laser_dirv=[laser_dir2,laser_dir3,laser_dir4,laser_dir5,laser_dir6,laser_dir7,pool_ld,dive_ld];
+
+figure
+title('% Error in Length & Depth according to laser parameters and depth')
+grid on 
+[r,u]=size(laser_errtests);
+
+
+for i = 1:11:r
+    test_lasererror=laser_errtests(i:i+10,1:5)
+  
+    o_param=(laser_originv(:,((i+10)/11)))';
+    d_param=(laser_dirv(:,((i+10)/11)))';
+    vair_angle=test_lasererror(11,4); %finding the  vair alpha for depth of 2 m
+    vair_pangle=test_lasererror(11,5); %finding the  vair phi  for depth of 2 m
+
+    plot_x=test_lasererror(:,1);
+    plot_y=test_lasererror(:,3);
+
+    hold on
+    %+ string(mat2str(d_param))+ ' ' +
+    scatter(plot_x,plot_y,'filled','DisplayName','origin: ' + string(norm(o_param)) +' alpha:' + string(vair_angle)+ char(176)+ ' phi:' + string(vair_pangle)+char(176))
+    legend
+end
+
+
+%}
 
