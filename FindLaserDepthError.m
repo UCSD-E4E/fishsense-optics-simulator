@@ -112,7 +112,7 @@ function FindLaserDepthError(rot1,rot2,layer_thickness,layer_indices,laser_origi
     %plot dive direction
     quiver3(diveorigin(1),diveorigin(3),diveorigin(2),(divefish_intersect(1)-diveorigin(1)),(divefish_intersect(3)-diveorigin(3)),(divefish_intersect(2)-diveorigin(2)),0,'-ok');
     laser_diff=divefish_intersect-poolfish_intersect
-    magnitude_diff=norm(laser_diff)
+    magnitude_diff=norm(laser_diff);
     %anglediff=arccos((laser_dir'*divedir)/(norm(laser_dir)*norm(divedir));
 
 

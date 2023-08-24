@@ -15,6 +15,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     rotation_matrixparallel=[1,0,0;0,1,0;0,0,1];
     totrotation_matrixparallel=rotation_matrixparallel*rotation_matrixparallel;
 
+    %{
     %Create Graph
     figure1=figure;
     % Create axes
@@ -30,6 +31,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     hold(axes1,'off');
     % Set the remaining axes properties
     set(axes1,'ZDir','reverse');
+    %}
 
     %Setting up color map to match rays corresponding to each depth 
     num_w=round((waterdepth_param(3)-waterdepth_param(1))/waterdepth_param(2)+1);
@@ -45,7 +47,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     y_oords1=[plane_size;-plane_size;-plane_size;plane_size];
     z_oords1=[a_thickness;a_thickness;a_thickness;a_thickness]; 
     z_oords2=[a_thickness+g_thickness;a_thickness+g_thickness;a_thickness+g_thickness;a_thickness+g_thickness]; 
-    
+    %{
     %Graph interface planes, origin, optical axis and laser
     patch(x_oords1,z_oords1,y_oords1,[0.3010 0.7450 0.9330])
     hold on
@@ -56,6 +58,8 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     quiver3(0,-50,0,0,100,0,'--ok') 
     hold on
     quiver3(laserorigin(1),laserorigin(3),laserorigin(2),6000*laserdir(1),6000*laserdir(3),6000*laserdir(2),0,'-*r')
+    %}
+
 
     %For loop for each depth 
     for w=waterdepth_param(1):waterdepth_param(2):waterdepth_param(3)
@@ -80,18 +84,20 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        laser_refractedray_dir=[[ag_intersect(1),(gw_intersect(1)-ag_intersect(1)),(laser_posfish(1)-gw_intersect(1))];[ag_intersect(2),(gw_intersect(2)-ag_intersect(2)),(laser_posfish(2)-gw_intersect(2))];[ag_intersect(3),(gw_intersect(3)-ag_intersect(3)),(laser_posfish(3)-gw_intersect(3))]]; 
        
        %plot refrfacted (actual) and unrefracted (estimated) light rays 
+       %{
        hold on 
        quiver3(planeorigins(1,:),planeorigins(3,:),planeorigins(2,:),laser_refractedray_dir(1,:),laser_refractedray_dir(3,:),laser_refractedray_dir(2,:),0,'color',CM(xx,:))
        scatter3(laser_posfish(1),laser_posfish(3),laser_posfish(2),'filled')
        text(laser_posfish(1),laser_posfish(3),laser_posfish(2),"Ref")
        hold on 
-
+       
        %plot estimated, unrefracted light rays. Extend out by arbitrary 6000 mm
        %scale
        quiver3([0],[0],[0],vair(1)*6000,vair(3)*6000,vair(2)*6000,0,'color',CM(xx,:))
        %}
        %Find estimated error between refracted and unrefracted laser
        %positions
+%}
 
        %define EQ
        Eq_y=(laserorigin(2)+var_laser*laserdir(2))-(var_camray*vair(2));

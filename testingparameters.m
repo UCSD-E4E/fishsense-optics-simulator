@@ -38,6 +38,7 @@ dist4=[2,11.56,3000];
 dist5=[2,11.56,4000];
 dist6=[2,11.56,5000];
 
+
 %indices (currently testing only smallest and largest values)
 %s=33, T=18, L=400
 indices1=[1,1.495,1.34976]; 
@@ -88,53 +89,62 @@ pool_ld=[0.00877752; 0.04130509; 0.99910793];
 dive_lo=[-0.03163025*1000;-0.10136059*1000;0];
 dive_ld=[0.01214438;0.02188269;0.99968678];
 
-%{
+
+pixelpitch=0.0015;
+focallength=4.5;
+
 %------------------------------------------------------------
 %ROTATION 1
 
 %Test 0
-test0=GraphRays3(r1_0,r2_0,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg0=AverageFocal(test0,ex_alpha_param,ex_phi_param);
+test0=GraphRays3(r1_0,r2_0,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+%avg0=AverageFocal(test0,ex_alpha_param,ex_phi_param);
 %writecell(test0,'optics_simulator_testing.xlsx','Sheet',1)
 %DisplayResults(test0)
 
 %Test 1 
-test1=GraphRays3(r1_0,r2_0,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg1=AverageFocal(test1,ex_alpha_param,ex_phi_param);
+%test1=GraphRays3(r1_0,r2_0,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+%avg1=AverageFocal(test1,ex_alpha_param,ex_phi_param);
 %writecell(test1,'optics_simulator_testing.xlsx','Sheet',2)
 
 %Test 2 
-test2=GraphRays3(r1_0,r2_0,dist2,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg2=AverageFocal(test2,ex_alpha_param,ex_phi_param);
+test2=GraphRays3(r1_0,r2_0,dist2,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+%avg2=AverageFocal(test2,ex_alpha_param,ex_phi_param);
 %writecell(test2,'optics_simulator_testing.xlsx','Sheet',3)
 %DisplayResults(test2)
 
-%Test 3
-test3=GraphRays3(r1_0,r2_0,dist2,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg3=AverageFocal(test3,ex_alpha_param,ex_phi_param);
+% %Test 3
+% test3=GraphRays3(r1_0,r2_0,dist2,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+% avg3=AverageFocal(test3,ex_alpha_param,ex_phi_param);
 %writecell(test3,'optics_simulator_testing.xlsx','Sheet',4)
 %DisplayResults(test3)
 
 %Test 4
-test4=GraphRays3(r1_0,r2_0,dist3,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg4=AverageFocal(test4,ex_alpha_param,ex_phi_param);
+test4=GraphRays3(r1_0,r2_0,dist3,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+%avg4=AverageFocal(test4,ex_alpha_param,ex_phi_param);
+
+
+%Following tests fill in the distance gap for chart used in paper
+test4_5=GraphRays3(r1_0,r2_0,dist4,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+test5_5=GraphRays3(r1_0,r2_0,dist5,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+
 
 %Test 5
-test5=GraphRays3(r1_0,r2_0,dist3,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg5=AverageFocal(test5,ex_alpha_param,ex_phi_param);
+% test5=GraphRays3(r1_0,r2_0,dist3,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+% avg5=AverageFocal(test5,ex_alpha_param,ex_phi_param);
 
 %Test 6
-test6=GraphRays3(r1_0,r2_0,dist6,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+test6=GraphRays3(r1_0,r2_0,dist6,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
 %writecell(test6,'optics_simulator_testing.xlsx','Sheet',5)
-avg6=AverageFocal(test6,ex_alpha_param,ex_phi_param);
+%avg6=AverageFocal(test6,ex_alpha_param,ex_phi_param);
 
 %Test 7
-test7=GraphRays3(r1_0,r2_0,dist6,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-avg7=AverageFocal(test7,ex_alpha_param,ex_phi_param);
+% test7=GraphRays3(r1_0,r2_0,dist6,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+% avg7=AverageFocal(test7,ex_alpha_param,ex_phi_param);
 %DisplayResults(test7)
 %writecell(test7,'optics_simulator_testing.xlsx','Sheet',6)
 
-
+%{
 
 %{
 %ROTATION 2----------------------------------------

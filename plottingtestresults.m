@@ -160,8 +160,10 @@ is assumed to be negligible between phis. Further testing needed to confirm this
 %xyerror_tests={test4;test5;test12;test12_1;test13;test13_1;test20;test20_1;test21;test21_1;}; 
 %Difference in IOR clumps at 60 deg goes up to over 30 mm. 
 
+%Test for paper 
+%xyerror_tests={test0;test2;test4;test4_5;test5_5;test6};  
 
-%XYError(xyerror_tests,[0,60],[0,30])
+XYError(xyerror_tests,[0,60],[0,30])
 
 %------------------------------------------------------
 
@@ -229,7 +231,7 @@ laser_dir7=[0.02814415;0.01302515;0.99951866];
 
 %Using largest IOR, layerthick1, plotting the varying %errors in length/depth for each camera.
 % Uncomment to see test results
-%{
+
 
 laser_error2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
 laser_error3=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
@@ -247,6 +249,11 @@ laser_errtests=[laser_error2;laser_error3;laser_error4;laser_error5;laser_error6
 laser_originv=[laser_origin2,laser_origin3,laser_origin4,laser_origin5,laser_origin6,laser_origin7,pool_lo,dive_lo];
 laser_dirv=[laser_dir2,laser_dir3,laser_dir4,laser_dir5,laser_dir6,laser_dir7,pool_ld,dive_ld];
 
+
+%Plot scatter %error
+%Plot_Percent_Error(laser_errtests)
+
+%{
 figure
 title('% Error in Length & Depth according to laser parameters and depth')
 grid on 
@@ -269,7 +276,32 @@ for i = 1:11:r
     scatter(plot_x,plot_y,'filled','DisplayName','origin: ' + string(norm(o_param)) +' alpha:' + string(vair_angle)+ char(176)+ ' phi:' + string(vair_pangle)+char(176))
     legend
 end
+%}
 
 
+%Plot box plot % error
+
+laser_errtest=[laser_error2';laser_error3';laser_error4';laser_error5';laser_error6';laser_error7';laser_err2';laser_err6'];
+
+figure
+title('% Error in Length & Depth according to laser parameters and depth')
+grid on 
+[r,u]=size(laser_errtest) %#rows is 5 times number tests, #columns is depths
+%boxplot(x) ,If x is a matrix, boxplot plots one box for each column of x.
+%So i want each column in my end matrix to be a depth
+
+box_matrix=zeros((r/5),u); %Initializing a matrix with the # rows of being #tests and each column a different depth
+
+a_var=0;
+for i = 3:5:(r-2) %gets to the line with percent error of every test on every iteration
+   
+    a_var=a_var+1;
+
+   for c = 1:u
+        box_matrix(a_var,c)=laser_errtest(i,c);
+   end
+   
+end
+boxplot(box_matrix)
 %}
 

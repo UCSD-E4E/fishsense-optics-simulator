@@ -9,7 +9,7 @@
 % 2012 IEEE Conference on Computer Vision and Pattern Recognition, 
 % Providence, RI, USA, 2012, pp. 3346-3353, doi: 10.1109/CVPR.2012.6248073.
 
-function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,lim,alpha_param,phi_param,color,label)
+function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,lim,alpha_param,phi_param,focal_length,pixel_pitch,color,label)
 
     %Thickness of layers, measured from previous plane to the intersection of the optical axis to the plane 
     t_air=thickness(1); 
@@ -40,12 +40,15 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     %Setting up empty cells for focal information of each backtraced ray
     focal_information=cell(num_alpha,num_phi);
 
+
+    %{
     %Create figure
     figure
 
     %graphing optical axis and origin
     quiver3(0,-50,0,0,100,0,'--ok') 
     plot3(0,0,0,'o','MarkerSize',5,'MarkerFaceColor','#000000') 
+    %}
 
     %{
     %UNCOMMENT TO SHOW LASER POSITION & DIRECTION ON GRAPH
@@ -95,7 +98,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     y_coords2=[bottom_left2(2);top_left2(2);top_right2(2);bottom_right2(2)];
     z_coords2=[(bottom_left2(3)+dist_water);(top_left2(3)+dist_water);(top_right2(3)+dist_water);(bottom_right2(3)+dist_water)]; 
 
-
+%{
     %Graphing interface planes
     patch(x_coords1,z_coords1,y_coords1,[0.3010 0.7450 0.9330])
     hold on
@@ -110,7 +113,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     ylim([-lim/4 lim]);
     zlim([-lim lim]);
     view(gca,[90 0.77])
-
+%}
      
     %{ 
     %UNCOMMENT TO DISPLAY ROTATION PARAMETERS
@@ -164,13 +167,22 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             estim_fishintercept=scaling_fish*norm_initial;
             xy_error=estim_fishintercept'-intersect_fish;
 
+            %Find intersection with image sensor
+            focal_scale=focal_length/norm_initial(3);
+            sensor_coord=(focal_scale/pixel_pitch)*[-norm_initial(1);-norm_initial(2)];
+            x_pixel=floor(sensor_coord(1));
+            y_pixel=floor(sensor_coord(2));
+            
+            mag_pixel=floor(norm(sensor_coord));
+
             %For color change ('y' color label option)
             ii= ii +1; 
             j_= j_ +1;
             
             %each row is a different alpha, column a different phi         
-            focal_information{i_,j_}=[double(round(alpha*180/pi)),double(round(phi*180/pi)),double(real(opticalintersect)),double(xy_error)];
+            focal_information{i_,j_}=[double(round(alpha*180/pi)),double(round(phi*180/pi)),double(real(opticalintersect)),double(xy_error),x_pixel,y_pixel,mag_pixel];
             
+            %{
             %Plotting ray with chosen labeling option
             if color=='y' 
                 hold on
@@ -199,7 +211,8 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
                     text(blabel_coords(1),blabel_coords(2),blabel_coords(3),string(blabel_alpha),'FontSize',8,'Color',[.5 .1 .3])
                     %}
                 end
-            end     
+            end 
+            %}
         end       
     end
 end 
