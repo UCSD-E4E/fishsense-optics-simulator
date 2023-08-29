@@ -163,7 +163,7 @@ is assumed to be negligible between phis. Further testing needed to confirm this
 %Test for paper 
 %xyerror_tests={test0;test2;test4;test4_5;test5_5;test6};  
 
-XYError(xyerror_tests,[0,60],[0,30])
+% XYError(xyerror_tests,[0,60],[0,30])
 
 %------------------------------------------------------
 
@@ -227,12 +227,15 @@ laser_dir6=[0.02536296;0.00915088;0.99963614];
 laser_origin7=[-0.03142921;-0.09906525;0]*1000;
 laser_dir7=[0.02814415;0.01302515;0.99951866];
 
+pool_lo=[-0.02991158*1000;-0.09781963*1000;0];
+pool_ld=[0.00877752; 0.04130509; 0.99910793];
+
 %ANOTHER WAY TO PLOT LASER DEPTH ERROR: 
 
 %Using largest IOR, layerthick1, plotting the varying %errors in length/depth for each camera.
 % Uncomment to see test results
 
-
+%{
 laser_error2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
 laser_error3=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
 laser_error4=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin4,laser_dir4);
@@ -241,7 +244,8 @@ laser_error6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser
 laser_error7=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin7,laser_dir7);
 laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
 laser_err6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,dive_lo,dive_ld);
-
+%}
+LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
 
 
 %Plot error on y axis, depth on x
@@ -280,12 +284,10 @@ end
 
 
 %Plot box plot % error
-
+%{
 laser_errtest=[laser_error2';laser_error3';laser_error4';laser_error5';laser_error6';laser_error7';laser_err2';laser_err6'];
 
-figure
-title('% Error in Length & Depth according to laser parameters and depth')
-grid on 
+
 [r,u]=size(laser_errtest) %#rows is 5 times number tests, #columns is depths
 %boxplot(x) ,If x is a matrix, boxplot plots one box for each column of x.
 %So i want each column in my end matrix to be a depth
@@ -302,6 +304,25 @@ for i = 3:5:(r-2) %gets to the line with percent error of every test on every it
    end
    
 end
+figure 
+
+hold on
 boxplot(box_matrix)
+xticklabels({'0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5','5.5'})
+
+xlabel('Actual Depth (m)','Interpreter','latex')
+
+title('Percent Error in Depth Estimation vs Actual Depth','Interpreter','latex')
+ylabel('\% Error in Depth','Interpreter','latex')
+grid on
+
+xaxisproperties= get(gca, 'XAxis');
+xaxisproperties.TickLabelInterpreter = 'latex'; % latex for x-axis
+yaxisproperties= get(gca, 'YAxis');
+yaxisproperties.TickLabelInterpreter = 'latex';   % tex for y-axis
+
 %}
+
+
+
 

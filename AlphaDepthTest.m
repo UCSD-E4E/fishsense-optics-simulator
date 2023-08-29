@@ -1,5 +1,6 @@
 %Function that takes in series of virtual camera coordinates for different alphas and different tests, and plots 
-%the z coordinates 
+%the z coordinates. The output matrix contains the mean and standard
+%deviation of each alpha's virtual camera z coordinates
 
 function [all_vcam]=AlphaDepthTest(depthtestaverages)
 
@@ -9,7 +10,7 @@ function [all_vcam]=AlphaDepthTest(depthtestaverages)
     ylabel('Z coordinate of virtual camera')
     title('Z coordinate of virtual camera vs axis')
     grid on 
-    [num_depthtestaverages,c]=size(depthtestaverages)
+    [num_depthtestaverages,c]=size(depthtestaverages);
 
     %Setting up output matrix 
     all_vcam=zeros(7,3); %Each row a different alpha, first column mean, second sd

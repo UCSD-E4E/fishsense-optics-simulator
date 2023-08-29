@@ -1,9 +1,4 @@
-%Function that plots a laser (given a direction and origin), and, at given depths, plots
-%refracted and unrefracted lightrays. Assumes planes are parallel and
-%perpendicular to optical axis
-
-
-function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indices,waterdepth_param,laserorigin,laserdir)
+function LaserDepthErrorPaper(layer_normal,layer_thickness,layer_indices,waterdepth_param,laserorigin,laserdir)
 
     syms var_camray var_laser
 
@@ -14,19 +9,12 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     %Define parallel, unrotated glass planes
     rotation_matrixparallel=[1,0,0;0,1,0;0,0,1];
     totrotation_matrixparallel=rotation_matrixparallel*rotation_matrixparallel;
-
     
     %Create Graph
     figure1=figure;
     % Create axes
     axes1 = axes('Parent',figure1);
     hold(axes1,'on');
-    % Create zlabel
-   % zlabel({'Y Axis (mm)',''});
-    % Create ylabel
-   % ylabel({'Z axis',''});
-    % Create xlabel
-  %  xlabel('X axis (mm)');
     grid(axes1,'on');
     hold(axes1,'off');
     view([90 0])
@@ -40,29 +28,8 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     ylim(axes1,[-10 70])
     set(gcf, 'PaperUnits', 'normalized')
     set(gcf, 'PaperPosition', [0 0 1 1])
-    %}
-
-    %Setting up color map to match rays corresponding to each depth 
-    num_w=round((waterdepth_param(3)-waterdepth_param(1))/waterdepth_param(2)+1);
-    CM=jet(num_w);
-    xx=0; 
-    
-    %Setting up output matrix: shows depth, error in depth, and percent error in depth/length 
-    depth_error=zeros(num_w,5);
-
-    %Setting up interface planes
-    plane_size=2000;
-    x_oords1=[-plane_size;-plane_size;plane_size;plane_size];
-    y_oords1=[plane_size;-plane_size;-plane_size;plane_size];
-    z_oords1=[a_thickness;a_thickness;a_thickness;a_thickness]; 
-    z_oords2=[a_thickness+g_thickness;a_thickness+g_thickness;a_thickness+g_thickness;a_thickness+g_thickness]; 
-    
-    
+  
     %Graph interface planes, origin, optical axis and laser
-    
-%     patch(x_oords1,z_oords1,y_oords1,[0.3010 0.7450 0.9330],'DisplayName','air/acrylic interface')
-%     hold on
-%     patch(x_oords1,z_oords2,y_oords1,[0 0.5470 0.5410],'DisplayName','acrylic/water interface')
     hold on
     plot3(0,0,0,'o','MarkerSize',5,'MarkerFaceColor','#FF00FF','DisplayName','focal point');
     hold on
@@ -71,18 +38,15 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     quiver3(laserorigin(1),laserorigin(3),laserorigin(2),6000*laserdir(1),6000*laserdir(3),6000*laserdir(2),0,'-*r','DisplayName','laser')
     legend('Interpreter','latex')
 
-    %for paper plot
+    %Plotting interfaces
     hold on
     quiver3(0,2,100,0,0,-200,'Color',[0.3010 0.7450 0.9330],'DisplayName','air/acrylic interface')
-   hold on
+    hold on
     quiver3(0,11.56,100,0,0,-200,'Color',[0 0.5470 0.5410],'DisplayName','acrylic/water interface')
-    %}
-    
+      
     %For loop for each depth 
     for w=waterdepth_param(1):waterdepth_param(2):waterdepth_param(3)
-       %Keeping track of each iteration
-       xx=xx+1;
-
+     
        %Calculate XYZ coordinates of laser on fish
        scaling_laser=(w-laserorigin(3))/laserdir(3);
        laser_posfish=laserorigin+ scaling_laser*laserdir;
@@ -100,11 +64,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        planeorigins=[0,ag_intersect(1),gw_intersect(1);0,ag_intersect(2),gw_intersect(2);0,ag_intersect(3),gw_intersect(3)];
        laser_refractedray_dir=[[ag_intersect(1),(gw_intersect(1)-ag_intersect(1)),(laser_posfish(1)-gw_intersect(1))];[ag_intersect(2),(gw_intersect(2)-ag_intersect(2)),(laser_posfish(2)-gw_intersect(2))];[ag_intersect(3),(gw_intersect(3)-ag_intersect(3)),(laser_posfish(3)-gw_intersect(3))]]; 
        
-       
-      %}
-       %Find estimated error between refracted and unrefracted laser
-       %positions
-%}
+       %Find estimated error between refracted and unrefracted rays
 
        %define EQ
        Eq_y=(laserorigin(2)+var_laser*laserdir(2))-(var_camray*vair(2));
@@ -116,35 +76,18 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        %Find difference in depth
        estimation_posfish=simplify(varcam*vair);
 
-       
-       %plot estimated, unrefracted light rays. Extend out by arbitrary 6000 mm
-       %scale
-      % quiver3([0],[0],[0],vair(1)*6000,vair(3)*6000,vair(2)*6000,0,'color',CM(xx,:))
-      quiver3([0],[0],[0],estimation_posfish(1),estimation_posfish(3),estimation_posfish(2),0,'-k','ShowArrowHead', 'off','DisplayName','estimated ray')
-
+       %plot estimated, unrefracted light rays.
+       quiver3([0],[0],[0],estimation_posfish(1),estimation_posfish(3),estimation_posfish(2),0,'-k','ShowArrowHead', 'off','DisplayName','estimated ray')
        scatter3(estimation_posfish(1),estimation_posfish(3),estimation_posfish(2),'filled', 'k','DisplayName','$\hat{p}$')
-       %text(estimation_posfish(1),estimation_posfish(3),estimation_posfish(2),"p_e")
-%plot refrfacted (actual) and unrefracted (estimated) light rays 
-       
+        
+       %plot refrfacted (actual) and unrefracted (estimated) light rays 
        hold on 
-       %quiver3(planeorigins(1,:),planeorigins(3,:),planeorigins(2,:),laser_refractedray_dir(1,:),laser_refractedray_dir(3,:),laser_refractedray_dir(2,:),0,'color',CM(xx,:))
        quiver3(planeorigins(1,:),planeorigins(3,:),planeorigins(2,:),laser_refractedray_dir(1,:),laser_refractedray_dir(3,:),laser_refractedray_dir(2,:),0,'-b','ShowArrowHead', 'off','DisplayName','actual ray')
-
        scatter3(laser_posfish(1),laser_posfish(3),laser_posfish(2),'filled','b','DisplayName','$p$')
-       %text(laser_posfish(1),laser_posfish(3),laser_posfish(2),"p")
        hold on 
       
-        %plot po for paper
-        
+       %plot po
        quiver3([0],[0],[0],ag_intersect(1)*2/3,ag_intersect(3)*2/3,ag_intersect(2)*2/3,0,'-','MaxHeadSize',3,'Color',"#00FF00",'LineWidth',1.5,'DisplayName','$\overrightarrow{op}$');
-       %}
 
-       %angle of vair
-       a_vair=acos((vair'*[0;0;1])/norm(vair))*180/pi;
-       p_vair=acos((vair'*[1;0;0])/norm(vair))*180/pi;
-
-       error_indepth=estimation_posfish(3)-laser_posfish(3);
-       percent_depth_error= (error_indepth/laser_posfish(3))*100;
-       depth_error(xx,:)=[w,error_indepth,percent_depth_error,a_vair,p_vair];
     end
-end 
+end

@@ -1,7 +1,10 @@
-%Function to calculate virtual camera coordinates (averaging among all the phis) 
-% per alpha
+%Helper function to calculate virtual camera coordinates (averaging among all the phis) 
+% per alpha. 
+% alphaparam should match alphaparam used for GraphRays3 to get
+% the foc_information
 
 function [coords]=AverageFocal(foc_information,alphaparam,phiparam)
+
    %Get # of rays
    size_alpha=floor((alphaparam(3)-alphaparam(1))/alphaparam(2))+1;
    size_phi=floor((phiparam(3)-phiparam(1))/phiparam(2))+1;
@@ -26,8 +29,7 @@ function [coords]=AverageFocal(foc_information,alphaparam,phiparam)
             phi_i=phi_i+1;
         end
 
-        %Output matrix: [alpha, x coordinate, y, z]; each row is a
-        %different alpha
+        %Output matrix: [alpha, x , y, z];
          coords(alpha_i,1)=a*180/pi;
          coords(alpha_i,2)=sumx/size_phi;
          coords(alpha_i,3)=sumy/size_phi;

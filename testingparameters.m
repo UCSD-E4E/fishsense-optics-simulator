@@ -97,7 +97,7 @@ focallength=4.5;
 %ROTATION 1
 
 %Test 0
-test0=GraphRays3(r1_0,r2_0,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+%test0=GraphRays3(r1_0,r2_0,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
 %avg0=AverageFocal(test0,ex_alpha_param,ex_phi_param);
 %writecell(test0,'optics_simulator_testing.xlsx','Sheet',1)
 %DisplayResults(test0)

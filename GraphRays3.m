@@ -40,8 +40,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     %Setting up empty cells for focal information of each backtraced ray
     focal_information=cell(num_alpha,num_phi);
 
-
-    %{
+    
     %Create figure
     figure
 
@@ -98,7 +97,6 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     y_coords2=[bottom_left2(2);top_left2(2);top_right2(2);bottom_right2(2)];
     z_coords2=[(bottom_left2(3)+dist_water);(top_left2(3)+dist_water);(top_right2(3)+dist_water);(bottom_right2(3)+dist_water)]; 
 
-%{
     %Graphing interface planes
     patch(x_coords1,z_coords1,y_coords1,[0.3010 0.7450 0.9330])
     hold on
@@ -113,14 +111,12 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     ylim([-lim/4 lim]);
     zlim([-lim lim]);
     view(gca,[90 0.77])
-%}
      
     %{ 
     %UNCOMMENT TO DISPLAY ROTATION PARAMETERS
     text(0,-4,4,"Plane 1 Rotation: [" + string(rotation1(1)*180/pi) + " about Y, " + string(rotation1(2)*180/pi) + " about X] degrees");
     text(0,-4,2,"Plane 2 Rotation: [" + string(rotation2(1)*180/pi) + " about Y, " + string(rotation2(2)*180/pi) + " about X] degrees");
     %}
-
 
    %Calculate & plot rays
     for alpha = alpha_param(1):alpha_param(2):alpha_param(3)
@@ -157,7 +153,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             v_y=directions(:,3);
             v_z=directions(:,2);
             
-            % Tracing back water rays to optical axis
+            %Tracing back water rays to optical axis
             fish_origin=[intersect_fish(1),intersect_fish(3),intersect_fish(2)];
             b_dir=[-vwater(1),-vwater(3),-vwater(2)];
 
@@ -167,7 +163,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             estim_fishintercept=scaling_fish*norm_initial;
             xy_error=estim_fishintercept'-intersect_fish;
 
-            %Find intersection with image sensor
+            %Find intersection of ray with image sensor
             focal_scale=focal_length/norm_initial(3);
             sensor_coord=(focal_scale/pixel_pitch)*[-norm_initial(1);-norm_initial(2)];
             x_pixel=floor(sensor_coord(1));
@@ -182,7 +178,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             %each row is a different alpha, column a different phi         
             focal_information{i_,j_}=[double(round(alpha*180/pi)),double(round(phi*180/pi)),double(real(opticalintersect)),double(xy_error),x_pixel,y_pixel,mag_pixel];
             
-            %{
+            
             %Plotting ray with chosen labeling option
             if color=='y' 
                 hold on
@@ -192,27 +188,17 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
             else 
                 hold on
                 quiver3(x_origins,y_origins,z_origins,v_x,v_y,v_z,0,'-*b') %refracted rays
-                
                 hold on
                 quiver3(fish_origin(1),fish_origin(2),fish_origin(3),b_scale*b_dir(1),b_scale*b_dir(2),b_scale*b_dir(3),'-*r') %backtraced rays
-
                 hold on
                 quiver3(0,0,0,estim_fishintercept(1),estim_fishintercept(3),estim_fishintercept(2),0,'-pentagramk') %estimated rays
 
-                if label =='y'
+                if label =='y' %labeling each ray with its alpha angle 
                     label_coords=[intersect_glass(1)*2/3,intersect_glass(2)*2/3,intersect_glass(3)*2/3];
                     label_alpha=string(round(alpha*180/pi));
                     text(label_coords(1),label_coords(3),label_coords(2),string(label_alpha),'FontSize',8,'Color',[0 .3 .7])
-                    %{
-                    %Work in progress. Labeling backtraced rays.
-                    bscale=z_total/(vwater*[0;0;1]);
-                    blabel_coords=[intersect_water(1)-vwater(1)*bscale*2/3,intersect_water(3)-vwater(3)*bscale*2/3,intersect_water(2)-vwater(2)*bscale*2/3];
-                    blabel_alpha=string(round(alpha*180/pi));
-                    text(blabel_coords(1),blabel_coords(2),blabel_coords(3),string(blabel_alpha),'FontSize',8,'Color',[.5 .1 .3])
-                    %}
                 end
             end 
-            %}
         end       
     end
 end 
