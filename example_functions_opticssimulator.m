@@ -49,23 +49,61 @@ DisplayResults(test9)
 Helper function in GraphRays
 %}
 
-%{
+%{ ff
 %GraphRays
 %--------------------------------------------
 %GraphRays3 (rotation1,rotation2,thickness,indices,lim,alpha_param,phi_param,focal_length,pixel_pitch,color,label)
 %Output: Graph and Matrix: cell matrix, each cell for each ray, contains: [alpha,phi,[virtual camera coordinates],[xy error],x pixel #,y pixel #,magnitude pixel # from center of sensor];
 
-GraphRays3([0,0],[0,0],[2,11.56,1000],[1,1.495,1.33496],30,[0,10*pi/180,60*pi/180],[pi/2,pi,3*pi/2],4.5,0.0015,'n','n');
+%GraphRays3([0.0,0.0],[0,0],[2,11.56,1000],[1,1.495,1.33496],15,[0,20*pi/180,60*pi/180],[pi/2,pi,3*pi/2],4.5,0.0015,'n','n');
 %}
 
 
 %{
 %LaserDepthErrorPaper
 %--------------------------------------------
-%LaserDepthError
+%LaserDepthErrorPaper(layer_normal,layer_thickness,layer_indices,waterdepth_param,laserorigin,laserdir)
+%Output: Graph
+
 laser_o7=[-0.03142921;-0.02906525;0]*1000;
 laser_d7=[0.02814415;0.01302515;0.99951866];
 layerthick1=[2,11.56];
 
- LaserDepthErrorPaper(paralplane,layerthick1,indices_largest,[60;60;60],laser_o7,laser_d7);
+LaserDepthErrorPaper(paralplane,layerthick1,indices_largest,[60;60;60],laser_o7,laser_d7)
+%}
 
+%
+%LaserDepthError
+%------------------------------------------------
+%LaserDepthError(layer_normal,layer_thickness,layer_indices,waterdepth_param,laserorigin,laserdir)
+%Output: Graph & Matrix: depth_error=[depth,depth error,percent depth
+%error,alpha of air ray,phi of air ray]
+
+laser_o7=[-0.03142921;-0.02906525;0]*1000;
+laser_d7=[0.02814415;0.01302515;0.99951866];
+layerthick1=[2,11.56];
+
+LaserDepthError(paralplane,layerthick1,indices_largest,[500;1000;4500],laser_o7,laser_d7)
+%}
+
+%{
+%TestAlpha
+%--------------------------------------------------
+%TestAlpha(avg_variables,desired_alpha)
+%Output: Graph & Matrix: averagesmatrix=[virtual cam x, virtual cam y,
+%virtual cam z, test #] -> each row is a different test
+
+depthtest_averages={avg0;avg1;avg2;avg3;avg4;avg5;avg6;avg7};
+TestAlpha(depthtest_averages,30)
+%}
+
+%{
+%XYError
+%--------------------------------------------------
+%XYError(test_variables,desired_alpharange,desired_phirange)
+%Output: Graph 
+
+xyerror_tests={test0;test2;test4};
+XYError(xyerror_tests,[0,60],[0,30])
+
+%}

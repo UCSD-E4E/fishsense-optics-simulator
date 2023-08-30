@@ -335,6 +335,37 @@ test31=GraphRays3(r1_3,r2_3,dist6,indices_largest,ex_lim,ex_alpha_param,ex_phi_p
 %writecell(test31,'optics_simulator_testing.xlsx','Sheet',24)
 
 %}
-%}
-%}
+
+
+%Testing with laser directions from cameras 2-7 (pool test)
+
+laser_origin2=[-0.03090316;-0.0995172;0]*1000;
+laser_dir2=[0.03036567;0.03888114;0.99878215];
+
+laser_origin3=[-0.02938965; -0.09794052;0]*1000;
+laser_dir3=[-0.00760419;0.01835205; 0.9998026 ];
+
+laser_origin4=[-0.03088575; -0.09819288;0]*1000;
+laser_dir4=[0.01611468; 0.02188467; 0.99963054];
+
+laser_origin5=[-0.02968504;-0.09813952;0]*1000;
+laser_dir5=[0.01520644;0.02237695;0.99963369];
+
+laser_origin6=[-0.02991985;-0.09841192;0]*1000;
+laser_dir6=[0.02536296;0.00915088;0.99963614];
+
+laser_origin7=[-0.03142921;-0.09906525;0]*1000;
+laser_dir7=[0.02814415;0.01302515;0.99951866];
+
+pool_lo=[-0.02991158*1000;-0.09781963*1000;0];
+pool_ld=[0.00877752; 0.04130509; 0.99910793];
+
+laser_error2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
+laser_error3=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
+laser_error4=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin4,laser_dir4);
+laser_error5=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin5,laser_dir5);
+laser_error6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin6,laser_dir6);
+laser_error7=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin7,laser_dir7);
+laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
+laser_err6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,dive_lo,dive_ld);
 

@@ -2,8 +2,7 @@
 %tests 
 
 function [averagesmatrix]= TestAlpha(avg_variables,desired_alpha)
-
-     %{
+     
      %Create Graph
      figure
      %graphing optical axis and origin
@@ -36,7 +35,7 @@ function [averagesmatrix]= TestAlpha(avg_variables,desired_alpha)
         alpha_avgz=avgtestname(alphanumber,4);
         averagesmatrix(r,:)=[alpha_avgx,alpha_avgy,alpha_avgz,r];
 
-        %{
+        
         %Plot virtual cam coordinates
         hold on 
         scatter3(alpha_avgx,alpha_avgz,alpha_avgy,'filled') 

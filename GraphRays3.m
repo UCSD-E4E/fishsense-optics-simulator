@@ -45,8 +45,10 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     figure
 
     %graphing optical axis and origin
-    quiver3(0,-50,0,0,100,0,'--ok') 
-    plot3(0,0,0,'o','MarkerSize',5,'MarkerFaceColor','#000000') 
+    hold on
+    quiver3(0,-50,0,0,1000,0,'--ok') 
+    hold on
+    plot3(0,0,0,'o','MarkerSize',6,'MarkerFaceColor','#000000') 
     %}
 
     %{
@@ -98,6 +100,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     z_coords2=[(bottom_left2(3)+dist_water);(top_left2(3)+dist_water);(top_right2(3)+dist_water);(bottom_right2(3)+dist_water)]; 
 
     %Graphing interface planes
+    hold on
     patch(x_coords1,z_coords1,y_coords1,[0.3010 0.7450 0.9330])
     hold on
     patch(x_coords2,z_coords2,y_coords2,[0 0.5470 0.5410])
@@ -108,9 +111,9 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
     ylabel('Z Axis (mm)')
     zlabel('Y Axis (mm)')
     xlim([-lim lim]);
-    ylim([-lim/4 lim]);
+    ylim([-lim/10 lim]);
     zlim([-lim lim]);
-    view(gca,[90 0.77])
+    view(gca,[90 1 0])
      
     %{ 
     %UNCOMMENT TO DISPLAY ROTATION PARAMETERS
@@ -189,7 +192,7 @@ function focal_information= GraphRays3 (rotation1,rotation2,thickness,indices,li
                 hold on
                 quiver3(x_origins,y_origins,z_origins,v_x,v_y,v_z,0,'-*b') %refracted rays
                 hold on
-                quiver3(fish_origin(1),fish_origin(2),fish_origin(3),b_scale*b_dir(1),b_scale*b_dir(2),b_scale*b_dir(3),'-*r') %backtraced rays
+               % quiver3(fish_origin(1),fish_origin(2),fish_origin(3),b_scale*b_dir(1),b_scale*b_dir(2),b_scale*b_dir(3),'-*r') %backtraced rays
                 hold on
                 quiver3(0,0,0,estim_fishintercept(1),estim_fishintercept(3),estim_fishintercept(2),0,'-pentagramk') %estimated rays
 
