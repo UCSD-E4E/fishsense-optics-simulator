@@ -49,13 +49,13 @@ DisplayResults(test9)
 Helper function in GraphRays
 %}
 
-%{ ff
+%%{ 
 %GraphRays
 %--------------------------------------------
 %GraphRays3 (rotation1,rotation2,thickness,indices,lim,alpha_param,phi_param,focal_length,pixel_pitch,color,label)
 %Output: Graph and Matrix: cell matrix, each cell for each ray, contains: [alpha,phi,[virtual camera coordinates],[xy error],x pixel #,y pixel #,magnitude pixel # from center of sensor];
 
-%GraphRays3([0.0,0.0],[0,0],[2,11.56,1000],[1,1.495,1.33496],15,[0,20*pi/180,60*pi/180],[pi/2,pi,3*pi/2],4.5,0.0015,'n','n');
+GraphRays3([0.0,0.0],[0,0],[2,11.56,1000],[1,1.495,1.33496],15,[0,20*pi/180,60*pi/180],[pi/2,pi,3*pi/2],4.5,0.0015,'n','n');
 %}
 
 
@@ -72,7 +72,7 @@ layerthick1=[2,11.56];
 LaserDepthErrorPaper(paralplane,layerthick1,indices_largest,[60;60;60],laser_o7,laser_d7)
 %}
 
-%
+%{
 %LaserDepthError
 %------------------------------------------------
 %LaserDepthError(layer_normal,layer_thickness,layer_indices,waterdepth_param,laserorigin,laserdir)

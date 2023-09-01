@@ -47,10 +47,10 @@ indices2=[1,1.495,1.33628];
 %s=33, T=30, L=400
 indices3=[1,1.495,1.34837];
 %s=33, T=18, L=700
-indices_small=[1,1.495,1.33496]; %SMALLEST 
+indices_small=[1;1.495;1.33496]; %SMALLEST 
 
 %s=34, T=18, L=400
-indices_largest=[1,1.495,1.34995]; %LARGEST 
+indices_largest=[1;1.495;1.34995]; %LARGEST 
 %s=34, T=18, L=700
 indices6=[1,1.495,1.33646];
 %s=34, T=30, L=400
@@ -95,78 +95,64 @@ focallength=4.5;
 
 %------------------------------------------------------------
 %ROTATION 1
-
+%{
 %Test 0
-%test0=GraphRays3(r1_0,r2_0,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
-%avg0=AverageFocal(test0,ex_alpha_param,ex_phi_param);
-%writecell(test0,'optics_simulator_testing.xlsx','Sheet',1)
-%DisplayResults(test0)
+test0=GraphRays3(r1_0,r2_0,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+avg0=AverageFocal(test0,ex_alpha_param,ex_phi_param);
+
 
 %Test 1 
-%test1=GraphRays3(r1_0,r2_0,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-%avg1=AverageFocal(test1,ex_alpha_param,ex_phi_param);
+test1=GraphRays3(r1_0,r2_0,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+avg1=AverageFocal(test1,ex_alpha_param,ex_phi_param);
 %writecell(test1,'optics_simulator_testing.xlsx','Sheet',2)
 
 %Test 2 
 test2=GraphRays3(r1_0,r2_0,dist2,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
-%avg2=AverageFocal(test2,ex_alpha_param,ex_phi_param);
+avg2=AverageFocal(test2,ex_alpha_param,ex_phi_param);
 %writecell(test2,'optics_simulator_testing.xlsx','Sheet',3)
-%DisplayResults(test2)
 
-% %Test 3
-% test3=GraphRays3(r1_0,r2_0,dist2,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-% avg3=AverageFocal(test3,ex_alpha_param,ex_phi_param);
+%Test 3
+test3=GraphRays3(r1_0,r2_0,dist2,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
+avg3=AverageFocal(test3,ex_alpha_param,ex_phi_param);
 %writecell(test3,'optics_simulator_testing.xlsx','Sheet',4)
-%DisplayResults(test3)
 
 %Test 4
 test4=GraphRays3(r1_0,r2_0,dist3,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
-%avg4=AverageFocal(test4,ex_alpha_param,ex_phi_param);
-
-
+avg4=AverageFocal(test4,ex_alpha_param,ex_phi_param);
+%}
+%{
 %Following tests fill in the distance gap for chart used in paper
 test4_5=GraphRays3(r1_0,r2_0,dist4,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
 test5_5=GraphRays3(r1_0,r2_0,dist5,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
 
 
 %Test 5
-% test5=GraphRays3(r1_0,r2_0,dist3,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-% avg5=AverageFocal(test5,ex_alpha_param,ex_phi_param);
+test5=GraphRays3(r1_0,r2_0,dist3,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+avg5=AverageFocal(test5,ex_alpha_param,ex_phi_param);
 
 %Test 6
 test6=GraphRays3(r1_0,r2_0,dist6,indices_small,ex_lim,ex_alpha_param,ex_phi_param,focallength,pixelpitch,ex_color,ex_label);
-%writecell(test6,'optics_simulator_testing.xlsx','Sheet',5)
-%avg6=AverageFocal(test6,ex_alpha_param,ex_phi_param);
+avg6=AverageFocal(test6,ex_alpha_param,ex_phi_param);
 
 %Test 7
-% test7=GraphRays3(r1_0,r2_0,dist6,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-% avg7=AverageFocal(test7,ex_alpha_param,ex_phi_param);
-%DisplayResults(test7)
-%writecell(test7,'optics_simulator_testing.xlsx','Sheet',6)
+test7=GraphRays3(r1_0,r2_0,dist6,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
+avg7=AverageFocal(test7,ex_alpha_param,ex_phi_param);
+%}
 
-%{
 
-%{
 %ROTATION 2----------------------------------------
 %Test 8
-
+%{
 test8=GraphRays3(r1_1,r2_1,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-
 avg8=AverageFocal(test8,ex_alpha_param,ex_phi_param);
-%DisplayResults(test8)
 %writecell(test8,'optics_simulator_testing.xlsx','Sheet',7)
 
 test8_1=GraphRays3(r1_12,r2_12,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
-
 avg8_1=AverageFocal(test8_1,ex_alpha_param,ex_phi_param);
-
 
 %Test 9 
 test9=GraphRays3(r1_1,r2_1,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg9=AverageFocal(test9,ex_alpha_param,ex_phi_param);
-
-%DisplayResults(test9)
-%writecell(test9,'optics_simulator_testing.xlsx','Sheet',8)
 
 test9_1=GraphRays3(r1_12,r2_12,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg9_1=AverageFocal(test9_1,ex_alpha_param,ex_phi_param);
@@ -174,9 +160,8 @@ avg9_1=AverageFocal(test9_1,ex_alpha_param,ex_phi_param);
 %Test 10
 test10=GraphRays3(r1_1,r2_1,dist2,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg10=AverageFocal(test10,ex_alpha_param,ex_phi_param);
-%DisplayResults(test10)
-%writecell(test10,'optics_simulator_testing.xlsx','Sheet',9)
-
+%}
+%{
 test10_1=GraphRays3(r1_12,r2_12,dist2,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg10_1=AverageFocal(test10_1,ex_alpha_param,ex_phi_param);
 
@@ -204,8 +189,8 @@ avg13=AverageFocal(test13,ex_alpha_param,ex_phi_param);
 test13_1=GraphRays3(r1_12,r2_12,dist3,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg13_1=AverageFocal(test13_1,ex_alpha_param,ex_phi_param);
 
-
-
+%}
+%{
 %Test 14
 test14=GraphRays3(r1_1,r2_1,dist6,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 %DisplayResults(test14)
@@ -240,8 +225,8 @@ test17=GraphRays3(r1_2,r2_2,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_p
 %DisplayResults(test17)
 avg17=AverageFocal(test17,ex_alpha_param,ex_phi_param);
 %DisplayResults(test9)
-
-%writecell(test17,'optics_simulator_testing.xlsx','Sheet',14)
+%}
+%{
 test17_1=GraphRays3(r1_22,r2_22,dist1,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg17_1=AverageFocal(test17_1,ex_alpha_param,ex_phi_param);
 
@@ -266,11 +251,12 @@ avg19_1=AverageFocal(test19_1,ex_alpha_param,ex_phi_param);
 %Test 20
 test20=GraphRays3(r1_2,r2_2,dist3,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg20=AverageFocal(test20,ex_alpha_param,ex_phi_param);
-%}
+
 
 test20_1=GraphRays3(r1_22,r2_22,dist3,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg20_1=AverageFocal(test20_1,ex_alpha_param,ex_phi_param);
-
+%}
+%
 %Test 21
 test21=GraphRays3(r1_2,r2_2,dist3,indices_largest,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg21=AverageFocal(test21,ex_alpha_param,ex_phi_param);
@@ -297,10 +283,8 @@ test23_1=GraphRays3(r1_22,r2_22,dist6,indices_largest,ex_lim,ex_alpha_param,ex_p
 avg23_1=AverageFocal(test23_1,ex_alpha_param,ex_phi_param);
 
 
-
-
 %ROTATION 4---------------------
-
+%{
 %Test 24
 test24=GraphRays3(r1_3,r2_3,dist1,indices_small,ex_lim,ex_alpha_param,ex_phi_param,ex_color,ex_label);
 avg24=AverageFocal(test24,ex_alpha_param,ex_phi_param);
@@ -359,7 +343,7 @@ laser_dir7=[0.02814415;0.01302515;0.99951866];
 
 pool_lo=[-0.02991158*1000;-0.09781963*1000;0];
 pool_ld=[0.00877752; 0.04130509; 0.99910793];
-
+%{
 laser_error2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
 laser_error3=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin2,laser_dir2);
 laser_error4=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin4,laser_dir4);
@@ -368,4 +352,4 @@ laser_error6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser
 laser_error7=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,laser_origin7,laser_dir7);
 laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
 laser_err6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,dive_lo,dive_ld);
-
+%}
