@@ -194,18 +194,18 @@ indices_largest=[1;1.495;1.34995];
 %Uncomment a line to see the graph and corresponding error data. 
 
 %Pool laser----
- % laser_err1=LaserDepthError(paralplane,layerthick1,indices_small,wat_dp,pool_lo,pool_ld);
-% laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
+ laser_err1=LaserDepthError(paralplane,layerthick1,indices_small,wat_dp,pool_lo,pool_ld);
+ laser_err2=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,pool_lo,pool_ld);
 
-% laser_err3=LaserDepthError(paralplane,layerthick2,indices_small,wat_dp,pool_lo,pool_ld);
-% laser_err4=LaserDepthError(paralplane,layerthick2,indices_largest,wat_dp,pool_lo,pool_ld);
+laser_err3=LaserDepthError(paralplane,layerthick2,indices_small,wat_dp,pool_lo,pool_ld);
+laser_err4=LaserDepthError(paralplane,layerthick2,indices_largest,wat_dp,pool_lo,pool_ld);
 
-% %Dive laser----
-% laser_err5=LaserDepthError(paralplane,layerthick1,indices_small,wat_dp,dive_lo,dive_ld);
-% laser_err6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,dive_lo,dive_ld);
+%Dive laser----
+laser_err5=LaserDepthError(paralplane,layerthick1,indices_small,wat_dp,dive_lo,dive_ld);
+laser_err6=LaserDepthError(paralplane,layerthick1,indices_largest,wat_dp,dive_lo,dive_ld);
 
-% laser_err7=LaserDepthError(paralplane,layerthick2,indices_small,wat_dp,dive_lo,dive_ld);
-% laser_err8=LaserDepthError(paralplane,layerthick2,indices_largest,wat_dp,dive_lo,dive_ld);
+laser_err7=LaserDepthError(paralplane,layerthick2,indices_small,wat_dp,dive_lo,dive_ld);
+laser_err8=LaserDepthError(paralplane,layerthick2,indices_largest,wat_dp,dive_lo,dive_ld);
 
 %Testing with laser directions from cameras 2-7 ( pool test)
 

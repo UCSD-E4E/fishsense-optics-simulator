@@ -125,7 +125,7 @@ function [intersections]= FindIntersection(rmatrix1,rmatrix2,v_air,d_air,d_glass
         Eq2=l12'*d2;
         [tans,sans]=solve([Eq1,Eq2],[t,s]); 
         
-        %Finding closest point on backtraced ray to optical axis
+        %Finding closes t point on backtraced ray to optical axis
         Q=[water_intersect(1)-v_water(1)*sans;water_intersect(2)-v_water(2)*sans;water_intersect(3)-v_water(3)*sans];
 
         x_intersect=double(Q(1));

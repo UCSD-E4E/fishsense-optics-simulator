@@ -15,6 +15,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     rotation_matrixparallel=[1,0,0;0,1,0;0,0,1];
     totrotation_matrixparallel=rotation_matrixparallel*rotation_matrixparallel;
     
+    %{
     %Create Graph
     figure1=figure;
     % Create axes
@@ -35,6 +36,8 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     %Set limits
     zlim([-80 70]);
     ylim([-waterdepth_param(1), waterdepth_param(3)*2]);
+    %}
+
 
     %Setting up color map to match rays corresponding to each depth 
     num_w=round((waterdepth_param(3)-waterdepth_param(1))/waterdepth_param(2)+1);
@@ -51,7 +54,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     z_oords1=[a_thickness;a_thickness;a_thickness;a_thickness]; 
     z_oords2=[a_thickness+g_thickness;a_thickness+g_thickness;a_thickness+g_thickness;a_thickness+g_thickness]; 
     
-    
+    %{
     %Graph interface planes, origin, optical axis and laser  
     patch(x_oords1,z_oords1,y_oords1,[0.3010 0.7450 0.9330],'DisplayName','air/acrylic interface')
     hold on
@@ -62,7 +65,7 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
     quiver3(0,0,0,0,waterdepth_param(3)*2.5,0,'--ok','DisplayName','optical axis') 
     hold on
     quiver3(laserorigin(1),laserorigin(3),laserorigin(2),10000*laserdir(1),10000*laserdir(3),10000*laserdir(2),0,'-*r','DisplayName','laser')
-    
+    %}
     %For loop for each depth 
     for w=waterdepth_param(1):waterdepth_param(2):waterdepth_param(3)
        %Keeping track of each iteration
@@ -91,14 +94,38 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        %define EQ
        Eq_y=(laserorigin(2)+var_laser*laserdir(2))-(var_camray*vair(2));
        Eq_z=(laserorigin(3)+var_laser*laserdir(3))-(var_camray*vair(3));
+       
 
        %Find intersection with line 
        [varcam,varlaser]=vpasolve([Eq_y,Eq_z],[var_camray,var_laser]);
-        
-       %Find difference in depth
-       estimation_posfish=simplify(varcam*vair);
+       Eq_x=(laserorigin(1)+varlaser*laserdir(1))-(varcam*vair(1));
 
+       %Find difference in depth
+       estimation_posfish=(varcam*vair);
+
+
+       %Make estimation how we actually do it
        
+        pixel_pitch=0.0015;
+        focal_length=4.5;
+
+       alpha_xy=laserdir(1:2);
+       alpha=laserdir;
+       l_xy=laserorigin(1:2);
+       air_pixel=focal_length/vair(3);
+       p=[-vair(1)*air_pixel;-vair(2)*air_pixel;-focal_length];
+       %p=[pixel_pitch*round(p(1),0);pixel_pitch*round(p(2),0);p(3)];
+       v=-p/norm(p);
+       v_xy=v(1:2);
+
+       lambda2=(-alpha_xy'*l_xy*alpha'*v+norm(alpha)^2*v_xy'*l_xy)/((alpha'*v)^2-norm(alpha)^2*norm(v)^2);
+       
+       est_posfish=-lambda2*v;
+
+       round(est_posfish,1);
+       round(estimation_posfish,1);
+
+       %{
        %plot estimated, unrefracted light rays. 
        quiver3([0],[0],[0],estimation_posfish(1),estimation_posfish(3),estimation_posfish(2),0,'color',CM(xx,:))
        scatter3(estimation_posfish(1),estimation_posfish(3),estimation_posfish(2),'filled', 'k')
@@ -107,17 +134,17 @@ function [depth_error]=LaserDepthError(layer_normal,layer_thickness,layer_indice
        %plot refrfacted (actual) and unrefracted (estimated) light rays 
        hold on 
        quiver3(planeorigins(1,:),planeorigins(3,:),planeorigins(2,:),laser_refractedray_dir(1,:),laser_refractedray_dir(3,:),laser_refractedray_dir(2,:),0,'color',CM(xx,:))
-
+       
        scatter3(laser_posfish(1),laser_posfish(3),laser_posfish(2),'filled','b','DisplayName','$p$')
        %text(laser_posfish(1),laser_posfish(3),laser_posfish(2),"p")
        hold on 
        %legend
-      
+       %}
        %angle of vair
        a_vair=acos((vair'*[0;0;1])/norm(vair))*180/pi;
        p_vair=acos((vair'*[1;0;0])/norm(vair))*180/pi;
 
-       error_indepth=estimation_posfish(3)-laser_posfish(3);
+       error_indepth=abs(est_posfish(3)-laser_posfish(3));
        percent_depth_error= (error_indepth/laser_posfish(3))*100;
        depth_error(xx,:)=[w,error_indepth,percent_depth_error,a_vair,p_vair];
     end

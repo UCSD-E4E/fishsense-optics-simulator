@@ -14,7 +14,7 @@ AlphaError(xyerror_tests,30,[0,90])
 %{
 %AlphaDepth Test
 %--------------------------------------------------------
-%AlphaDepthTest(depthtestaverages)
+%AlphaDepthTest(depthtestaverages) 
 %Output: Graph &  Matrix: [alphadegrees,mean(z coords),std(z coords)], where
 %#rows corresponds to # of alphas being evaluated
 
@@ -49,7 +49,7 @@ DisplayResults(test9)
 Helper function in GraphRays
 %}
 
-%%{ 
+%{ 
 %GraphRays
 %--------------------------------------------
 %GraphRays3 (rotation1,rotation2,thickness,indices,lim,alpha_param,phi_param,focal_length,pixel_pitch,color,label)
@@ -97,6 +97,7 @@ depthtest_averages={avg0;avg1;avg2;avg3;avg4;avg5;avg6;avg7};
 TestAlpha(depthtest_averages,30)
 %}
 
+
 %{
 %XYError
 %--------------------------------------------------
@@ -105,5 +106,4 @@ TestAlpha(depthtest_averages,30)
 
 xyerror_tests={test0;test2;test4};
 XYError(xyerror_tests,[0,60],[0,30])
-
 %}
